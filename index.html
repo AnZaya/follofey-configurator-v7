@@ -325,7 +325,8 @@ function build(){
         h+='<div class="opt-i" onclick="event.stopPropagation();var p=this.querySelector(\'.opt-popup\');document.querySelectorAll(\'.opt-popup.show\').forEach(function(x){if(x!==p)x.classList.remove(\'show\')});p.classList.toggle(\'show\')">i';
         h+='<div class="opt-popup"><img src="'+imgUrl+'" alt=""><span>'+name+'</span></div></div>';
       }
-      h+='<span class="opt-right"><span class="weight">'+kg(wt)+'</span><span class="price">'+fm(cost)+' \u20BD</span></span></div>';
+      h+='<span class="opt-right"><span class="weight">'+kg(wt)+' \u043A\u0433</span><span class="price">'+fm(cost)+' \u20BD</span></span></div>';
+    });
     h+='</div></div>';
   });
   b.innerHTML=h;

@@ -6,9 +6,9 @@
 <title>FOLLOFEY — Конфигуратор</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{min-height:100%}
+html,body{min-height:100%;height:100%}
 body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f5f5;color:#222;padding:10px}
-.container{max-width:960px;margin:0 auto;background:#fff;border-radius:16px 16px 0 0;box-shadow:0 2px 20px rgba(0,0,0,.08);overflow:hidden;padding-bottom:20px}
+.container{max-width:960px;margin:0 auto;background:#fff;border-radius:16px 16px 0 0;box-shadow:0 2px 20px rgba(0,0,0,.08);overflow:visible;padding-bottom:20px;min-height:90vh}
 .header{background:linear-gradient(135deg,#1a1a2e,#16213e);padding:24px 28px 20px;text-align:center}
 .header h1{font-size:26px;font-weight:700;color:#fff;font-family:Georgia,serif}
 .header h1 span{color:#f90}
@@ -17,7 +17,7 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sa
 .card{cursor:pointer;border:2px solid #e0e0e0;border-radius:12px;overflow:hidden;transition:.2s}
 .card:hover{border-color:#f90;box-shadow:0 2px 12px rgba(255,153,0,.15)}
 .card.sel{border-color:#f90;background:#fff8f0}
-.card-img{height:175px;background-size:cover;background-position:center}
+.card-img{height:245px;background-size:cover;background-position:center}
 .card-body{padding:12px 14px}
 .card-top{display:flex;justify-content:space-between;align-items:center}
 .card-name{font-size:18px;font-weight:700;color:#1a1a2e}
@@ -40,19 +40,20 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sa
 .name .note{display:block;font-size:11px;color:#999;font-weight:400;margin-top:1px}
 .price{font-weight:700;color:#f90;white-space:nowrap;font-size:13px;min-width:75px;text-align:right;flex-shrink:0}
 .weight{color:#888;font-size:12px;white-space:nowrap;min-width:50px;text-align:right;flex-shrink:0}
-.opt-i{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#f90;color:#fff;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;position:relative}
-.opt-i:hover .opt-popup,.opt-i.show .opt-popup{display:block}
-.opt-popup{display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);z-index:100;background:#fff;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,.2);padding:8px;min-width:180px;text-align:center}
+.opt-i{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#f90;color:#fff;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;position:relative;line-height:1}
+.opt-i:hover .opt-popup,.opt-popup.show{display:block}
+.opt-popup{display:none;position:fixed;z-index:9999;background:#fff;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,.25);padding:8px;min-width:200px;text-align:center;pointer-events:auto;top:50%;left:50%;transform:translate(-50%,-50%)}
 .opt-popup img{max-width:160px;max-height:120px;border-radius:4px;display:block;margin:0 auto}
 .opt-popup span{display:block;font-size:11px;color:#555;margin-top:4px}
 .bar{max-width:960px;margin:0 auto;background:#1a1a2e;border-radius:0 0 16px 16px;box-shadow:0 2px 20px rgba(0,0,0,.08);padding:14px 24px}
-.bar-in{display:flex;justify-content:flex-start;align-items:center;gap:6px}
-.bar-item{text-align:left;padding:0 6px}
+.bar-in{display:flex;justify-content:flex-start;align-items:center;gap:4px}
+.bar-item{text-align:left;padding:0 4px}
 .bar-lbl{color:#aaa;font-size:9px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;white-space:nowrap}
 .bar-val{color:#fff;font-size:22px;font-weight:700;white-space:nowrap}
 .bar-val.mod{color:#fff}
-.bar-val.opt{color:#f90}
-.bar-val.total{color:#fff;background:rgba(255,153,0,.25);padding:2px 10px;border-radius:6px;margin-left:-8px}
+.bar-val.opt{color:#fff}
+.bar-val.total{color:#ffc107;font-size:26px}
+.bar-val.total .rur{font-size:20px}
 .bar-val.wt{color:#8cf}
 .bar-sep{color:#444;font-size:18px;padding:0 4px;opacity:.5}
 .bar-btn{background:#f90;color:#fff;border:none;padding:10px 22px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:.2s;white-space:nowrap;margin-left:auto}
@@ -318,12 +319,14 @@ function build(){
       var p=o.split("|");var id=p[0],name=p[1],cost=parseInt(p[2]),wt=parseFloat(p[3]);
       var imgUrl=IMGS_URL[id]||"";
       h+='<div class="opt">';
+      h+='<input type="checkbox" id="chk_'+id+'" onchange="upd()">';
+      h+='<label for="chk_'+id+'" class="name">'+name+'</label>';
       if(imgUrl){
         h+='<div class="opt-i" onclick="event.stopPropagation();var p=this.querySelector(\'.opt-popup\');document.querySelectorAll(\'.opt-popup.show\').forEach(function(x){if(x!==p)x.classList.remove(\'show\')});p.classList.toggle(\'show\')">i';
         h+='<div class="opt-popup"><img src="'+imgUrl+'" alt=""><span>'+name+'</span></div></div>';
       }
-      h+='<input type="checkbox" id="chk_'+id+'" onchange="upd()">';
-      h+='<label for="chk_'+id+'" class="name">'+name+'</label>';
+      h+='<span class="weight">'+kg(wt)+' \u043A\u0433</span>';
+      h+='<span class="price">'+fm(cost)+' \u20BD</span></div>';
       h+='<span class="weight">'+kg(wt)+' \u043A\u0433</span>';
       h+='<span class="price">'+fm(cost)+' \u20BD</span></div>';
     });

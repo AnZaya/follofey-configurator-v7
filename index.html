@@ -8,7 +8,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{min-height:100%;height:100%}
 body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f5f5;color:#222;padding:10px}
-.container{max-width:960px;margin:0 auto;background:#fff;border-radius:16px 16px 0 0;box-shadow:0 2px 20px rgba(0,0,0,.08);overflow:visible;padding-bottom:20px;min-height:90vh}
+.container{max-width:960px;margin:0 auto;background:#fff;border-radius:16px 16px 0 0;box-shadow:0 2px 20px rgba(0,0,0,.08);overflow:visible;padding-bottom:20px;min-height:95vh}
 .header{background:linear-gradient(135deg,#1a1a2e,#16213e);padding:24px 28px 20px;text-align:center}
 .header h1{font-size:26px;font-weight:700;color:#fff;font-family:Georgia,serif}
 .header h1 span{color:#f90}
@@ -95,21 +95,21 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sa
 </div>
 
 <div class="models">
-<div class="card" data-m="A3" data-p="448000" onclick="sel(this)">
+<div class="card" data-m="A3" data-p="632000" onclick="sel(this)">
 <div class="card-img" style="background-image:url('https://static.tildacdn.com/tild3137-6232-4737-b030-376365363164/Weixin_Image_2026042.jpg')"></div>
 <div class="card-body">
 <div class="card-top">
 <div class="card-name">A3</div>
-<div class="card-price">448 000 &#8381;</div></div>
-<div class="card-desc">Базовый модуль без выдвижных секций. На 3-х человек. Вес: 350 кг</div></div></div>
+<div class="card-price">632 000 &#8381;</div></div>
+<div class="card-desc">Базовый модуль без выдвижных секций. На 3-х человек.<br>Вес: 350 кг</div></div></div>
 
-<div class="card" data-m="A3_Max" data-p="560000" onclick="sel(this)">
+<div class="card" data-m="A3_Max" data-p="760000" onclick="sel(this)">
 <div class="card-img" style="background-image:url('https://static.tildacdn.com/tild3935-3462-4536-a166-643139393438/Weixin_Image_2026042.jpg')"></div>
 <div class="card-body">
 <div class="card-top">
 <div class="card-name">A3 Max</div>
-<div class="card-price">560 000 &#8381;</div></div>
-<div class="card-desc">С двумя выдвижными слайдерами. Максимум пространства. Вес: 450 кг</div></div></div>
+<div class="card-price">760 000 &#8381;</div></div>
+<div class="card-desc">С двумя выдвижными слайдерами. Максимум пространства.<br>Вес: 450 кг</div></div></div>
 </div>
 
 <h2 id="st3" class="std-title">Стандартная комплектация A3</h2>
@@ -158,11 +158,11 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sa
 
 <div class="bar">
 <div class="bar-in">
-<div class="bar-item"><div class="bar-lbl">Модуль</div><div class="bar-val mod" id="bar_mod">448 000</div></div>
+<div class="bar-item"><div class="bar-lbl">Модуль</div><div class="bar-val mod" id="bar_mod">632 000</div></div>
 <div class="bar-sep">|</div>
 <div class="bar-item"><div class="bar-lbl">Опции</div><div class="bar-val opt" id="bar_opt">+0</div></div>
 <div class="bar-sep">|</div>
-<div class="bar-item"><div class="bar-lbl">Итого</div><div class="bar-val total" id="bar_total">448 000</div></div>
+<div class="bar-item"><div class="bar-lbl">Итого</div><div class="bar-val total" id="bar_total">632 000</div></div>
 <div class="bar-sep">|</div>
 <div class="bar-item"><div class="bar-lbl">Вес</div><div class="bar-val wt" id="bar_wt">350 кг</div></div>
 <button class="bar-btn" onclick="formOpen()">Оставить заявку</button>
@@ -185,13 +185,13 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sa
 <script>
 var N = {"A3":"A3","A3_Max":"A3 Max"};
 var BASE_W = {"A3":350,"A3_Max":450};
-var BASE_P = {"A3":448000,"A3_Max":560000};
+var BASE_P = {"A3":632000,"A3_Max":760000};
 
 // Формат: id|Название|Цена|Вес|фото_url
 var O = {
   "A3": [
     ["Электрическая система", [
-      "solar_160|Солнечная панель + MPPT контроллер (до 640W)|96|0.025",
+      "solar_160|Солнечная панель + MPPT контроллер 160W|15360|7",
       "a3_b|LiFePO\u2084 аккумулятор 300 Ah (~3,8 кВт\u00b7ч)|56000|36",
       "a3_i|Инвертор 2000W промышленной частоты|44006|14.5",
       "a3_g|Бортовая зарядка DC-DC (от генератора)|27200|5",
@@ -293,7 +293,7 @@ var IMGS_URL = {
   "mx_a2": "https://static.tildacdn.com/tild3436-3165-4162-b463-663238323731/Weixin_Image_2026042.jpg"
 };
 
-var M = "A3", P = 448000, W = 350;
+var M = "A3", P = 632000, W = 350;
 
 function fm(v){return v.toString().replace(/\B(?=(\d{3})+(?!\d))/g," ");}
 function kg(v){v=parseFloat(v);return v%1===0?v.toString():v.toFixed(1).replace(/\.0$/,"");}

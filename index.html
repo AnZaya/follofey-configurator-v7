@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FOLLOFEY — Конфигуратор</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f5f5;color:#222;padding:10px}
+.container{max-width:960px;margin:0 auto;background:#fff;border-radius:16px 16px 0 0;box-shadow:0 2px 20px rgba(0,0,0,.08);overflow:hidden;padding-bottom:20px}
+.header{background:linear-gradient(135deg,#1a1a2e,#16213e);padding:24px 28px 20px;text-align:center}
+.header h1{font-size:26px;font-weight:700;color:#fff;font-family:Georgia,serif}
+.header h1 span{color:#f90}
+.header p{color:#aaa;font-size:14px;margin-top:6px}
+.models{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:16px}
+.card{cursor:pointer;border:2px solid #e0e0e0;border-radius:12px;overflow:hidden;transition:.2s}
+.card:hover{border-color:#f90;box-shadow:0 2px 12px rgba(255,153,0,.15)}
+.card.sel{border-color:#f90;background:#fff8f0}
+.card-img{height:175px;background-size:cover;background-position:center}
+.card-body{padding:12px 14px}
+.card-top{display:flex;justify-content:space-between;align-items:center}
+.card-name{font-size:18px;font-weight:700;color:#1a1a2e}
+.card-price{font-size:17px;font-weight:700;color:#f90}
+.card-desc{font-size:13px;color:#777;margin-top:4px}
+.std-title{font-size:14px;font-weight:600;padding:10px 16px 4px;color:#333!important;text-transform:uppercase;letter-spacing:.5px}
+.std-box{background:#fafafa;margin:0 16px 12px;border-radius:10px;padding:12px}
+.std-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.std-item{font-size:13px;color:#555;display:flex;align-items:center;gap:6px}
+.ck{color:#4caf50;font-weight:700;font-size:14px}
+.opt-box{padding:0 16px 16px}
+.opt-box h2{font-size:15px;font-weight:600;color:#333;margin-bottom:10px;padding-left:2px}
+.cat{background:#fafafa;border-radius:10px;margin-bottom:8px;overflow:hidden}
+.cat-h{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;font-size:14px;font-weight:600;color:#333;background:#f0f0f0;user-select:none}
+.cat-b{padding:4px 0}
+.opt{display:flex;align-items:center;gap:8px;padding:6px 14px;font-size:13px;border-bottom:1px solid #eee}
+.opt:last-child{border:none}
+.opt input[type=checkbox]{width:18px;height:18px;accent-color:#f90;cursor:pointer;flex-shrink:0}
+.name{flex:1;cursor:pointer;color:#444}
+.name .note{display:block;font-size:11px;color:#999;font-weight:400;margin-top:1px}
+.price{font-weight:700;color:#f90;white-space:nowrap;font-size:13px;min-width:75px;text-align:right;flex-shrink:0}
+.weight{color:#888;font-size:12px;white-space:nowrap;min-width:50px;text-align:right;flex-shrink:0}
+.opt-i{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#f90;color:#fff;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;position:relative}
+.opt-i:hover .opt-popup,.opt-i.show .opt-popup{display:block}
+.opt-popup{display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);z-index:100;background:#fff;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,.2);padding:8px;min-width:180px;text-align:center}
+.opt-popup img{max-width:160px;max-height:120px;border-radius:4px;display:block;margin:0 auto}
+.opt-popup span{display:block;font-size:11px;color:#555;margin-top:4px}
+.bar{max-width:960px;margin:0 auto;background:#1a1a2e;border-radius:0 0 16px 16px;box-shadow:0 2px 20px rgba(0,0,0,.08);padding:14px 24px}
+.bar-in{display:flex;justify-content:flex-start;align-items:center;gap:6px}
+.bar-item{text-align:left;padding:0 6px}
+.bar-lbl{color:#aaa;font-size:9px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;white-space:nowrap}
+.bar-val{color:#fff;font-size:22px;font-weight:700;white-space:nowrap}
+.bar-val.mod{color:#fff}
+.bar-val.opt{color:#f90}
+.bar-val.total{color:#fff;background:rgba(255,153,0,.25);padding:2px 10px;border-radius:6px;margin-left:-8px}
+.bar-val.wt{color:#8cf}
+.bar-sep{color:#444;font-size:18px;padding:0 4px;opacity:.5}
+.bar-btn{background:#f90;color:#fff;border:none;padding:10px 22px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:.2s;white-space:nowrap;margin-left:auto}
+.bar-btn:hover{background:#e68a00}
+.modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:999;align-items:center;justify-content:center;padding:20px}
+.modal-in{background:#fff;border-radius:14px;padding:28px;max-width:400px;width:100%;position:relative;text-align:center}
+.modal-close{position:absolute;top:10px;right:14px;background:none;border:none;font-size:22px;cursor:pointer;color:#999}
+.modal h3{font-size:20px;margin-bottom:4px;color:#1a1a2e}
+.modal .sum{color:#f90;font-weight:700;font-size:18px;margin-bottom:16px}
+.modal form{display:flex;flex-direction:column;gap:10px}
+.modal input{padding:12px 14px;border:2px solid #ddd;border-radius:8px;font-size:15px}
+.modal input:focus{outline:none;border-color:#f90}
+.modal form button{background:#f90;color:#fff;border:none;padding:12px;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer}
+.modal form button:hover{background:#e68a00}
+.ok{display:none;padding:16px}
+.ok .ico{font-size:48px;color:#4caf50}
+.ok h4{font-size:18px;margin:8px 0 4px}
+.ok p{color:#777;font-size:14px}
+@media(max-width:750px){
+  .bar-in{flex-wrap:wrap;gap:4px}
+  .bar-item{padding:0 4px}
+  .bar-val{font-size:16px}
+  .bar-sep{font-size:14px;padding:0 2px}
+  .bar-btn{font-size:12px;padding:8px 14px}
+}
+@media(max-width:600px){
+  .models{grid-template-columns:1fr}
+  .std-grid{grid-template-columns:1fr}
+  .header h1{font-size:22px}
+  .bar-val{font-size:14px}
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>Собери свой <span>FOLLOFEY</span></h1>
+<p>Выберите модель и дополнительное оборудование</p>
+</div>
+
+<div class="models">
+<div class="card" data-m="A3" data-p="448000" onclick="sel(this)">
+<div class="card-img" style="background-image:url('https://static.tildacdn.com/tild3137-6232-4737-b030-376365363164/Weixin_Image_2026042.jpg')"></div>
+<div class="card-body">
+<div class="card-top">
+<div class="card-name">A3</div>
+<div class="card-price">448 000 &#8381;</div></div>
+<div class="card-desc">Базовый модуль без выдвижных секций. На 3-х человек. Вес: 350 кг</div></div></div>
+
+<div class="card" data-m="A3_Max" data-p="560000" onclick="sel(this)">
+<div class="card-img" style="background-image:url('https://static.tildacdn.com/tild3935-3462-4536-a166-643139393438/Weixin_Image_2026042.jpg')"></div>
+<div class="card-body">
+<div class="card-top">
+<div class="card-name">A3 Max</div>
+<div class="card-price">560 000 &#8381;</div></div>
+<div class="card-desc">С двумя выдвижными слайдерами. Максимум пространства. Вес: 450 кг</div></div></div>
+</div>
+
+<h2 id="st3" class="std-title">Стандартная комплектация A3</h2>
+<div id="std3" class="std-box">
+<div class="std-grid">
+<div class="std-item"><span class="ck">&#10003;</span>Корпус сэндвич-панели (стекловолокно 2мм + XPS + полиэтилен)</div>
+<div class="std-item"><span class="ck">&#10003;</span>Зоны нагрузки — 4-слойная сэндвич-конструкция</div>
+<div class="std-item"><span class="ck">&#10003;</span>Цвет: чёрный, серый, белый</div>
+<div class="std-item"><span class="ck">&#10003;</span>Мягкая открывающаяся крыша (4 стойки + ПВХ тент)</div>
+<div class="std-item"><span class="ck">&#10003;</span>Матрасы и подушки 50D</div>
+<div class="std-item"><span class="ck">&#10003;</span>Задние алюминиевые кофры 2 шт</div>
+<div class="std-item"><span class="ck">&#10003;</span>Гелевый аккумулятор 100 А·ч</div>
+<div class="std-item"><span class="ck">&#10003;</span>Солнечная панель 160 Вт + MPPT</div>
+<div class="std-item"><span class="ck">&#10003;</span>USB&#10005;1, прикуриватель&#10005;2</div>
+<div class="std-item"><span class="ck">&#10003;</span>Домкраты 4 шт</div>
+</div></div>
+
+<h2 id="stMax" class="std-title">Стандартная комплектация A3 Max</h2>
+<div id="stdMax" class="std-box">
+<div class="std-grid">
+<div class="std-item"><span class="ck">&#10003;</span>Корпус сэндвич-панели (стекловолокно 2мм + XPS + полиэтилен)</div>
+<div class="std-item"><span class="ck">&#10003;</span>Зоны нагрузки — 4-слойная сэндвич-конструкция</div>
+<div class="std-item"><span class="ck">&#10003;</span>Цвет: чёрный, серый, белый</div>
+<div class="std-item"><span class="ck">&#10003;</span>Мягкая открывающаяся крыша (4 стойки + ПВХ тент)</div>
+<div class="std-item"><span class="ck">&#10003;</span>Ширина на выбор: 175 см / 185 см</div>
+<div class="std-item"><span class="ck">&#10003;</span>Выдвижные секции 2 шт (60 см)</div>
+<div class="std-item"><span class="ck">&#10003;</span>Матрасы и подушки 50D</div>
+<div class="std-item"><span class="ck">&#10003;</span>Задние алюминиевые кофры 2 шт</div>
+<div class="std-item"><span class="ck">&#10003;</span><b>Раковина, бак воды 55 л, насос</b></div>
+<div class="std-item"><span class="ck">&#10003;</span>Гелевый аккумулятор 100 А·ч</div>
+<div class="std-item"><span class="ck">&#10003;</span>Солнечная панель 160 Вт + MPPT</div>
+<div class="std-item"><span class="ck">&#10003;</span>Подсветка LED, USB&#10005;2, прикуриватель&#10005;2 (360W)</div>
+<div class="std-item"><span class="ck">&#10003;</span>Вытяжка</div>
+<div class="std-item"><span class="ck">&#10003;</span>Домкраты 4 шт</div>
+</div></div>
+
+<div id="opt3" class="opt-box">
+<h2>Дополнительное оборудование для A3</h2>
+</div>
+
+<div id="optMax" class="opt-box">
+<h2>Дополнительное оборудование для A3 Max</h2>
+</div>
+
+</div>
+
+<div class="bar">
+<div class="bar-in">
+<div class="bar-item"><div class="bar-lbl">Модуль</div><div class="bar-val mod" id="bar_mod">448 000</div></div>
+<div class="bar-sep">|</div>
+<div class="bar-item"><div class="bar-lbl">Опции</div><div class="bar-val opt" id="bar_opt">+0</div></div>
+<div class="bar-sep">|</div>
+<div class="bar-item"><div class="bar-lbl">Итого</div><div class="bar-val total" id="bar_total">448 000</div></div>
+<div class="bar-sep">|</div>
+<div class="bar-item"><div class="bar-lbl">Вес</div><div class="bar-val wt" id="bar_wt">350 кг</div></div>
+<button class="bar-btn" onclick="formOpen()">Оставить заявку</button>
+</div></div>
+
+<div class="modal" id="modal">
+<div class="modal-in">
+<button class="modal-close" onclick="modal.style.display='none'">&#10005;</button>
+<h3>Заявка на FOLLOFEY</h3>
+<div class="sum" id="msum"></div>
+<form onsubmit="send(event)">
+<input id="fn" type="text" placeholder="Ваше имя" required>
+<input id="fp" type="tel" placeholder="Номер телефона" required>
+<button type="submit">Отправить заявку</button></form>
+<div class="ok" id="ok">
+<div class="ico">&#10004;</div>
+<h4>Заявка отправлена!</h4>
+<p>Мы свяжемся с вами в ближайшее время</p></div></div></div>
+
+<script>
+var N = {"A3":"A3","A3_Max":"A3 Max"};
+var BASE_W = {"A3":350,"A3_Max":450};
+var BASE_P = {"A3":448000,"A3_Max":560000};
+
+// Формат: id|Название|Цена|Вес|фото_url
+var O = {
+  "A3": [
+    ["Электрическая система", [
+      "solar_160|Солнечная панель + MPPT контроллер (до 640W)|96|0.025",
+      "a3_b|LiFePO\u2084 аккумулятор 300 Ah (~3,8 кВт\u00b7ч)|56000|36",
+      "a3_i|Инвертор 2000W промышленной частоты|44006|14.5",
+      "a3_g|Бортовая зарядка DC-DC (от генератора)|27200|5",
+      "a3_h|Дизельный отопитель Longfei 5kW (горная версия)|38400|9.5",
+      "a3_f|Холодильник 12V 35л двухзонный|20800|15",
+      "a3_w|Водонагреватель 220V мгновенный 8л|14400|4",
+      "a3_v|Вытяжка верхняя ручная с подсветкой|14400|5",
+      "a3_p|Влагостойкая мебельная доска (защита от влаги)|8000|0",
+      "mx_c|Кондиционер 12V инверторный Yierfu|64000|29",
+      "fog|Противотуманные фары 4 шт|22400|2"
+    ]],
+    ["Система водоснабжения", [
+      "a3_s|Внутренний душ (лейка+шторка+смеситель)|24000|10",
+      "a3_p_wet|Влагостойкая мебельная доска (обязательна при заказе душа)|8000|0",
+      "water100|Увеличение бака воды до 100л (вместо 55л)|3200|27",
+      "a3_ws|Раковина + бак 55л + насос|33600|8"
+    ]],
+    ["Внешние аксессуары", [
+      "a3_a1|Маркиза 180\u00b0 алюминий Dashu 2,5\u00d72м|36800|18",
+      "a3_a2|Маркиза 270\u00b0 мягкая (китайская)|44800|24",
+      "out_shower|Внешний душевой бокс (лейка+смеситель)|5120|2",
+      "sh_tent_ada|Душевая палатка ADA|28800|10",
+      "sh_tent_cn|Душевая палатка (китайский аналог)|20800|10",
+      "a3_perf|Перфорированная доска (система Wall Control)|8000|1",
+      "a3_l|Подвесная складная лестница|14246|3",
+      "a3_sp|Сапёрная лопата + крепления|4800|1"
+    ]],
+    ["Индивидуальные опции", [
+      "a3_alcab|Алюминиевый ящик под кроватью (+10 см рундук)|32000|20",
+      "a3_r|Электрический подъём крыши|96000|90",
+      "a3_t|Парусиновый брезент (вместо гладкого тента)|4800|0",
+      "a3_ext|Удлинение кузова на ~20 см|16000|50",
+      "a3_win|Переднее раздвижное окно 1200\u00d7300мм|16000|1",
+      "a3_ind|Индукционная плита + раковина (доп. к стандартной)|36800|3",
+      "a3_hook|Быстросъёмный крюк (комплект)|4800|2",
+      "a3_trak|Траки для эвакуации 119\u00d735см|19200|5",
+      "a3_diz|Внешняя дизельная плита|80000|8",
+      "a3_scr|Проекционный экран 50\u2033|6400|5",
+      "a3_proj|Проектор Nut N1 Air|48000|1",
+      "a3_cam|Система видеонаблюдения 4 камеры|38400|1",
+      "a3_cam_rm|Система видеонаблюдения 4 камеры + удаленный доступ|44800|1"
+    ]]
+  ],
+  "A3_Max": [
+    ["Оборудование слайдеров", [
+      "mx_f|Холодильник 12V 35л двухзонный|20800|15",
+      "mx_m|Микроволновая печь Vitaps 700W (220V)|12160|5",
+      "mx_h|Дизельный отопитель Longfei 5kW (горная версия)|38400|9.5",
+      "mx_t|Складной стол (для слайдера)|15000|5"
+    ]],
+    ["Электрическая система", [
+      "mx_b4|LiFePO\u2084 аккумулятор 490 Ah (~6,2 кВт\u00b7ч)|83200|48",
+      "mx_b6|LiFePO\u2084 аккумулятор 600 Ah (~7,7 кВт\u00b7ч)|94400|54",
+      "mx_b8|LiFePO\u2084 аккумулятор 800 Ah (~10,2 кВт\u00b7ч)|134400|63",
+      "mx_i|Инвертор 3000W промышленной частоты|50406|18",
+      "mx_g|Бортовая зарядка DC-DC (от генератора)|27200|5",
+      "mx_c|Кондиционер 12V инверторный Yierfu|64000|29",
+      "mx_v|Вытяжка верхняя с электроприводом (авто-закрытие)|24000|5",
+      "mx_w|Водонагреватель 220V мгновенный 8л|14400|4"
+    ]],
+    ["Внешние аксессуары", [
+      "mx_a1|Маркиза 180\u00b0 алюминий Dashu 2,5\u00d72м|36800|18",
+      "mx_a2|Маркиза 270\u00b0 алюминий ADA (жёсткий чехол)|86400|22",
+      "mx_a2_walls|Боковые стенки для маркизы 270\u00b0 ADA|48000|15",
+      "out_shower|Внешний душевой бокс (лейка+смеситель)|5120|2",
+      "sh_tent_ada|Душевая палатка ADA|28800|10",
+      "sh_tent_cn|Душевая палатка (китайский аналог)|20800|10",
+      "mx_perf|Перфорированная доска (система Wall Control)|8000|1",
+      "mx_l|Подвесная складная лестница|14246|3",
+      "mx_sp|Сапёрная лопата + крепления|4800|1"
+    ]],
+    ["Индивидуальные опции", [
+      "mx_alcab|Алюминиевый ящик под кроватью (+10 см рундук)|32000|20",
+      "mx_r|Электрический подъём крыши|96000|90",
+      "mx_t|Парусиновый брезент (вместо гладкого тента)|4800|0",
+      "mx_win|Переднее раздвижное окно 1200x300мм|16000|1",
+      "mx_ind|Индукционная плита + раковина (доп. к стандартной)|36800|3",
+      "mx_hook|Быстросъёмный крюк (комплект)|4800|2",
+      "mx_trak|Траки для эвакуации 119x35см|19200|5",
+      "mx_diz|Внешняя дизельная плита|80000|8",
+      "mx_scr|Проекционный экран 50\u2033|6400|5",
+      "mx_proj|Проектор Nut N1 Air|48000|1",
+      "mx_cam|Система видеонаблюдения 4 камеры|38400|1",
+      "mx_cam_rm|Система видеонаблюдения 4 камеры + удаленный доступ|44800|1"
+    ]]
+  ]
+};
+
+var IMGS_URL = {
+  "solar_160": "https://static.tildacdn.com/tild3431-3963-4266-a662-343361626332/Weixin_Image_2026042.jpg",
+  "a3_b": "https://static.tildacdn.com/tild6331-6565-4662-b536-653430356231/Weixin_Image_2026042.jpg",
+  "a3_f": "https://static.tildacdn.com/tild3761-3365-4365-a534-383466643330/Weixin_Image_2026042.jpg",
+  "a3_v": "https://static.tildacdn.com/tild6136-6339-4762-b132-616232346433/Weixin_Image_2026042.jpg",
+  "a3_s": "https://static.tildacdn.com/tild6437-3235-4234-b335-613236346161/Weixin_Image_2026042.jpg",
+  "a3_a1": "https://static.tildacdn.com/tild3936-3765-4338-a539-353561316435/Weixin_Image_2026042.jpg",
+  "a3_a2": "https://static.tildacdn.com/tild3166-3830-4262-a561-343538353935/Weixin_Image_2026042.jpg",
+  "a3_r": "https://static.tildacdn.com/tild3735-3162-4831-a533-373333313334/Weixin_Image_2026042.jpg",
+  "mx_c": "https://static.tildacdn.com/tild6637-3566-4930-b435-376364383334/Weixin_Image_2026042.jpg",
+  "mx_a2": "https://static.tildacdn.com/tild3436-3165-4162-b463-663238323731/Weixin_Image_2026042.jpg"
+};
+
+var M = "A3", P = 448000, W = 350;
+
+function fm(v){return v.toString().replace(/\B(?=(\d{3})+(?!\d))/g," ");}
+function kg(v){v=parseFloat(v);return v%1===0?v.toString():v.toFixed(1).replace(/\.0$/,"");}
+
+function sel(e){
+  M=e.getAttribute("data-m");P=parseInt(e.getAttribute("data-p"));W=BASE_W[M];
+  document.querySelectorAll(".card").forEach(function(c){c.classList.remove("sel");});
+  e.classList.add("sel");
+  document.querySelectorAll(".std-title,.std-box,.opt-box").forEach(function(x){x.style.display="none";});
+  var k=M==="A3"?"3":"Max";
+  document.getElementById("st"+k).style.display="block";
+  document.getElementById("std"+k).style.display="block";
+  document.getElementById("opt"+k).style.display="block";
+  build();upd();
+}
+
+function build(){
+  var b=document.getElementById("opt"+(M==="A3"?"3":"Max"));
+  var h="<h2>\u0414\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0435 \u043E\u0431\u043E\u0440\u0443\u0434\u043E\u0432\u0430\u043D\u0438\u0435 \u0434\u043B\u044F "+N[M]+"</h2>";
+  (O[M]||[]).forEach(function(g){
+    h+='<div class="cat"><div class="cat-h">'+g[0]+'</div><div class="cat-b">';
+    g[1].forEach(function(o){
+      var p=o.split("|");var id=p[0],name=p[1],cost=parseInt(p[2]),wt=parseFloat(p[3]);
+      var imgUrl=IMGS_URL[id]||"";
+      h+='<div class="opt">';
+      if(imgUrl){
+        h+='<div class="opt-i" onclick="event.stopPropagation();var p=this.querySelector(\'.opt-popup\');document.querySelectorAll(\'.opt-popup.show\').forEach(function(x){if(x!==p)x.classList.remove(\'show\')});p.classList.toggle(\'show\')">i';
+        h+='<div class="opt-popup"><img src="'+imgUrl+'" alt=""><span>'+name+'</span></div></div>';
+      }
+      h+='<input type="checkbox" id="chk_'+id+'" onchange="upd()">';
+      h+='<label for="chk_'+id+'" class="name">'+name+'</label>';
+      h+='<span class="weight">'+kg(wt)+' \u043A\u0433</span>';
+      h+='<span class="price">'+fm(cost)+' \u20BD</span></div>';
+    });
+    h+='</div></div>';
+  });
+  b.innerHTML=h;
+}
+
+function upd(){
+  var tp=P,tw=W;
+  document.querySelectorAll(".cat-b input:checked").forEach(function(c){
+    var id=c.id.replace("chk_","");
+    (O[M]||[]).forEach(function(g){g[1].forEach(function(o){
+      var p=o.split("|");if(p[0]===id){tp+=parseInt(p[2]);tw+=parseFloat(p[3]);}
+    });});
+  });
+  var optSum=tp-P;
+  document.getElementById("bar_mod").textContent=fm(P);
+  document.getElementById("bar_opt").textContent=optSum>0?"+"+fm(optSum):"+0";
+  document.getElementById("bar_total").textContent=fm(tp);
+  document.getElementById("bar_wt").textContent=kg(tw)+" \u043A\u0433";
+}
+
+function formOpen(){
+  document.getElementById("msum").textContent=N[M]+" \u2014 "+document.getElementById("bar_total").textContent+" \u20BD";
+  document.getElementById("modal").style.display="flex";
+}
+
+function send(e){
+  e.preventDefault();
+  var n=document.getElementById("fn").value;
+  var p=document.getElementById("fp").value;
+  var txt="\u0417\u0430\u044F\u0432\u043A\u0430 FOLLOFEY%0A%0A\u041C\u043E\u0434\u0435\u043B\u044C: "+N[M]+"%0A\u0421\u0443\u043C\u043C\u0430: "+document.getElementById("bar_total").textContent+" \u20BD%0A\u0412\u0435\u0441: "+document.getElementById("bar_wt").textContent+"%0A\u0418\u043C\u044F: "+encodeURIComponent(n)+"%0ATel: "+encodeURIComponent(p);
+  var ids=[];
+  document.querySelectorAll(".cat-b input:checked").forEach(function(c){
+    var id=c.id.replace("chk_","");
+    (O[M]||[]).forEach(function(g){g[1].forEach(function(o){
+      var oo=o.split("|");if(oo[0]===id)ids.push(oo[1]);
+    });});
+  });
+  if(ids.length)txt+="%0A\u041E\u043F\u0446\u0438\u0438: "+encodeURIComponent(ids.join(", "));
+  fetch("https://api.telegram.org/bot8650707856:***/sendMessage",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({chat_id:"512267849",text:decodeURIComponent(txt.replace(/%0A/g,"\\n"))})}).catch(function(){});
+  document.getElementById("ok").style.display="block";
+  document.querySelector("#modal form").style.display="none";
+}
+
+document.addEventListener("DOMContentLoaded",function(){
+  document.querySelector('.card[data-m="A3"]').classList.add("sel");
+  document.getElementById("std3").style.display="block";
+  document.getElementById("st3").style.display="block";
+  document.getElementById("opt3").style.display="block";
+  build();upd();
+});
+</script>
+</body>
+</html>
